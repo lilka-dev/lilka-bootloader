@@ -1,0 +1,29 @@
+diff --git a/components/retro-go/targets/lilka/config.h b/components/retro-go/targets/lilka/config.h
+index a0630dd7..9d61b5a3 100644
+--- a/components/retro-go/targets/lilka/config.h
++++ b/components/retro-go/targets/lilka/config.h
+@@ -124,9 +124,10 @@
+ /****************************************************************************
+  * Updater                                                                  *
+  ****************************************************************************/
+-#define RG_UPDATER_ENABLE               1
+-#define RG_UPDATER_APPLICATION          RG_APP_FACTORY
+-#define RG_UPDATER_DOWNLOAD_LOCATION    RG_STORAGE_ROOT "/retro-go/firmware"
++// Retro-Go shares the flash with Keira OS (see lilka_boot partitions.csv):
++// "Reboot to factory" goes back to Keira, and the updater would overwrite the shared layout.
++#define RG_APP_FACTORY                  "app0"
++#define RG_UPDATER_ENABLE               0
+ 
+ 
+ /****************************************************************************
+@@ -134,7 +135,10 @@
+  ****************************************************************************/
+ #define RG_RECOVERY_BTN RG_KEY_MENU // Keep this button pressed to open the recovery menu
+ 
++// Keira switches here with rollback enabled (state PENDING_VERIFY): confirm the boot,
++// otherwise the bootloader returns to Keira on the next reset.
+ #define RG_CUSTOM_PLATFORM_INIT() \
++    esp_ota_mark_app_valid_cancel_rollback(); \
+     gpio_set_direction(RG_GPIO_LCD_CS, GPIO_MODE_OUTPUT); \
+     gpio_set_level(RG_GPIO_LCD_CS, 1); \
+     gpio_set_direction(GPIO_NUM_46, GPIO_MODE_OUTPUT); \

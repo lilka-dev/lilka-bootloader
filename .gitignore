@@ -1,0 +1,6 @@
+build/
+bootloader/build-docker/
+bootloader/sdkconfig
+bootloader/sdkconfig.old
+.DS_Store
+.vscode/
